@@ -1,0 +1,5 @@
+# DVC ignore patterns
+*.tmp
+*.log
+__pycache__/
+.DS_Store

@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/*.ipynb
+
+# Data (DVC tracked)
+data/raw/
+data/validated/
+data/splits/
+data/rejected/
+data/metadata/*.csv
+*.jpg
+*.jpeg
+*.png
+!frontend/assets/*.png
+!results/*.png
+
+# Models (DVC tracked)
+models/saved/*.pt
+models/saved/*.pth
+
+# Logs
+logs/
+*.log
+
+# MLflow
+mlruns/
+mlflow.db
+
+# DVC
+.dvc/cache
+.dvc/tmp
+.dvc/config.local
+
+# Coverage
+.coverage
+htmlcov/

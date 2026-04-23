@@ -1,0 +1,38 @@
+[project]
+name = "pak-public-figures-classifier"
+version = "1.0.0"
+description = "Production-grade image classification for 30 Pakistani public figures"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Abdullah-Khan-Niazi", email = "abdullahniazi078@gmail.com" },
+    { name = "RazaSherazi09", email = "razaasherazi@gmail.com" },
+    { name = "Maarij-Aqeel", email = "maarij@example.com" },
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "notebooks",
+    "data",
+    "models/saved",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"
+markers = [
+    "slow: marks tests as slow (deselect with -m 'not slow')",
+    "integration: marks tests requiring network or models",
+]

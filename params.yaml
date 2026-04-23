@@ -1,0 +1,58 @@
+data_collection:
+  target_per_class: 200
+  min_per_class: 80
+  per_class_per_engine: 60
+  rate_limit_seconds: 5
+  scrapers:
+    - icrawler
+    - duckduckgo
+    - wikipedia
+    - news_sites
+
+validation:
+  face_confidence_threshold: 0.95
+  min_face_area_ratio: 0.10
+  face_padding_ratio: 0.20
+  min_resolution: 224
+  blur_threshold: 100.0
+  min_file_size_bytes: 5120
+  max_aspect_ratio: 3.0
+  dedup_hash_distance: 5
+  outlier_similarity_threshold: 0.5
+  embedding_samples_per_class: 50
+
+preprocessing:
+  train_ratio: 0.75
+  val_ratio: 0.15
+  test_ratio: 0.10
+  random_seed: 42
+  image_size: 224
+  resize_size: 256
+
+training:
+  models:
+    - resnet50
+    - efficientnet_b3
+  batch_size: 32
+  warmup_epochs: 5
+  fine_tune_epochs: 45
+  warmup_lr: 0.001
+  fine_tune_lr: 0.0001
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  early_stopping_patience: 8
+  gradient_clip: 1.0
+  use_amp: true
+  num_workers: 4
+  dropout: 0.3
+  hidden_dim: 512
+
+evaluation:
+  top_k: 3
+  generate_gradcam: true
+  max_misclassified_per_class: 5
+
+api:
+  max_file_size_mb: 10
+  default_model: resnet50
+  inference_timeout_seconds: 30
