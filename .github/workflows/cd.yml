@@ -1,0 +1,52 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t pak-faces:${{ github.sha }} \
+                       -t pak-faces:latest .
+
+      - name: Smoke test image
+        run: |
+          docker run --rm pak-faces:latest \
+            python -c "from src.api.main import create_app; create_app()"
+
+      - name: Login to Docker Hub
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push image
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+        run: |
+          docker tag pak-faces:latest \
+            ${{ secrets.DOCKERHUB_USERNAME }}/pak-faces:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/pak-faces:latest
+
+      - name: Deploy to EC2
+        if: ${{ secrets.EC2_HOST != '' }}
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /opt/pak-faces
+            docker-compose pull
+            docker-compose up -d --remove-orphans
+            docker image prune -f
