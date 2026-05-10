@@ -1,0 +1,52 @@
+stages:
+  collect:
+    cmd: python scripts/run_data_collection.py
+    deps:
+      - src/data_collection/
+      - scripts/run_data_collection.py
+    outs:
+      - data/raw/
+    params:
+      - data_collection
+
+  validate:
+    cmd: python scripts/run_validation.py
+    deps:
+      - data/raw/
+      - src/data_validation/
+      - scripts/run_validation.py
+    outs:
+      - data/validated/
+    params:
+      - validation
+
+  split:
+    cmd: python scripts/run_split.py --force
+    deps:
+      - data/validated/
+      - src/data_preprocessing/splitter.py
+      - scripts/run_split.py
+    outs:
+      - data/splits/
+    params:
+      - preprocessing
+
+  train:
+    cmd: python scripts/run_training.py
+    deps:
+      - data/splits/
+      - src/models/
+      - src/data_preprocessing/
+      - scripts/run_training.py
+    outs:
+      - models/saved/
+    params:
+      - training
+    metrics:
+      - results/model_comparison.csv:
+          cache: false
+    plots:
+      - results/resnet50_training_curves.png:
+          cache: false
+      - results/efficientnet_b3_training_curves.png:
+          cache: false
