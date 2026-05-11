@@ -82,7 +82,9 @@ class FaceDetector:
         if boxes is None or len(boxes) == 0:
             return FaceResult(Path(""), "rejected", "no_face_detected", faces_found=0)
 
-        faces = list(zip(boxes, probs or []))
+        if probs is None:
+            probs = [None] * len(boxes)
+        faces = list(zip(boxes, probs))
         faces = [(b, p) for b, p in faces if p is not None
                  and p >= self.confidence_threshold]
         if not faces:
@@ -148,6 +150,12 @@ class FaceDetector:
         out_dir = VALIDATED_DIR / class_name
         out_dir.mkdir(parents=True, exist_ok=True)
         cropped = self.crop_with_padding(image, result.bbox)
+        min_side = 256
+        w, h = cropped.size
+        if min(w, h) < min_side:
+            scale = min_side / min(w, h)
+            new_size = (int(w * scale), int(h * scale))
+            cropped = cropped.resize(new_size, Image.LANCZOS)
         out_path = out_dir / src_path.name
         try:
             cropped.save(out_path, format="JPEG", quality=92)

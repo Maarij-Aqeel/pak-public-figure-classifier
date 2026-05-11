@@ -1,0 +1,166 @@
+{
+  "timestamp": "2026-05-11T10:31:10.606602",
+  "total_images": 3211,
+  "per_class_counts": {
+    "ahmed_sharif_chaudhry": 0,
+    "ahsan_iqbal": 0,
+    "akhtar_mengal": 0,
+    "ali_amin_gandapur": 0,
+    "asad_umar": 0,
+    "asif_ali_zardari": 312,
+    "asim_munir": 0,
+    "benazir_bhutto": 332,
+    "bilawal_bhutto_zardari": 308,
+    "chaudhry_shujaat_hussain": 0,
+    "fawad_chaudhry": 0,
+    "fazl_ur_rehman": 0,
+    "hamza_shehbaz": 335,
+    "hina_rabbani_khar": 0,
+    "imran_khan": 312,
+    "khawaja_asif": 0,
+    "mahmood_khan_achakzai": 0,
+    "maryam_nawaz_sharif": 309,
+    "murad_ali_shah": 321,
+    "nawaz_sharif": 331,
+    "pervez_elahi": 0,
+    "pervez_khattak": 0,
+    "pervez_musharraf": 0,
+    "qamar_javed_bajwa": 0,
+    "shah_mehmood_qureshi": 0,
+    "shehbaz_sharif": 318,
+    "sheikh_rashid_ahmed": 0,
+    "sherry_rehman": 0,
+    "sirajul_haq": 0,
+    "yousaf_raza_gillani": 333
+  },
+  "classes_below_min": [
+    "ahmed_sharif_chaudhry",
+    "ahsan_iqbal",
+    "akhtar_mengal",
+    "ali_amin_gandapur",
+    "asad_umar",
+    "asim_munir",
+    "chaudhry_shujaat_hussain",
+    "fawad_chaudhry",
+    "fazl_ur_rehman",
+    "hina_rabbani_khar",
+    "khawaja_asif",
+    "mahmood_khan_achakzai",
+    "pervez_elahi",
+    "pervez_khattak",
+    "pervez_musharraf",
+    "qamar_javed_bajwa",
+    "shah_mehmood_qureshi",
+    "sheikh_rashid_ahmed",
+    "sherry_rehman",
+    "sirajul_haq"
+  ],
+  "per_class_runs": [
+    {
+      "class": "imran_khan",
+      "total": 312,
+      "per_source": {
+        "icrawler": 225,
+        "duckduckgo": 0,
+        "wikipedia": 0,
+        "news": 14
+      },
+      "duration_s": 247.16,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "nawaz_sharif",
+      "total": 331,
+      "per_source": {
+        "icrawler": 238
+      },
+      "duration_s": 212.67,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "shehbaz_sharif",
+      "total": 318,
+      "per_source": {
+        "icrawler": 221
+      },
+      "duration_s": 125.55,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "maryam_nawaz_sharif",
+      "total": 309,
+      "per_source": {
+        "icrawler": 238
+      },
+      "duration_s": 148.43,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "hamza_shehbaz",
+      "total": 335,
+      "per_source": {
+        "icrawler": 248
+      },
+      "duration_s": 183.49,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "asif_ali_zardari",
+      "total": 312,
+      "per_source": {
+        "icrawler": 257
+      },
+      "duration_s": 181.71,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "bilawal_bhutto_zardari",
+      "total": 308,
+      "per_source": {
+        "icrawler": 230
+      },
+      "duration_s": 155.55,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "benazir_bhutto",
+      "total": 332,
+      "per_source": {
+        "icrawler": 202,
+        "duckduckgo": 34
+      },
+      "duration_s": 225.09,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "yousaf_raza_gillani",
+      "total": 333,
+      "per_source": {
+        "icrawler": 239
+      },
+      "duration_s": 97.0,
+      "errors": [],
+      "meets_min": true
+    },
+    {
+      "class": "murad_ali_shah",
+      "total": 321,
+      "per_source": {
+        "icrawler": 268
+      },
+      "duration_s": 98.1,
+      "errors": [],
+      "meets_min": true
+    }
+  ],
+  "target_per_class": 300,
+  "min_per_class": 80
+}

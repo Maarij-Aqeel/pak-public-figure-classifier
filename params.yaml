@@ -10,14 +10,14 @@ data_collection:
     - news_sites
 
 validation:
-  face_confidence_threshold: 0.95
-  min_face_area_ratio: 0.10
-  face_padding_ratio: 0.20
-  min_resolution: 224
-  blur_threshold: 100.0
-  min_file_size_bytes: 5120
+  face_confidence_threshold: 0.90
+  min_face_area_ratio: 0.05
+  face_padding_ratio: 0.25
+  min_resolution: 160
+  blur_threshold: 40.0
+  min_file_size_bytes: 3072
   max_aspect_ratio: 3.0
-  dedup_hash_distance: 5
+  dedup_hash_distance: 4
   outlier_similarity_threshold: 0.5
   embedding_samples_per_class: 50
 

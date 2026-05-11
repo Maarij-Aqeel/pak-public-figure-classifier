@@ -33,7 +33,8 @@ httpx>=0.25.0
 # MLOps
 mlflow>=2.8.0
 dvc>=3.30.0
-dvc-s3>=2.23.0
+# dvc-s3 only needed if your DVC remote is S3 — install separately to avoid AWS dep conflicts
+# pip install "dvc-s3>=2.23.0"
 
 # Visualization + Explainability
 matplotlib>=3.7.0
@@ -41,7 +42,11 @@ seaborn>=0.12.0
 grad-cam>=1.4.8
 
 # Orchestration
-apache-airflow>=2.7.0
+# apache-airflow is only needed on the Airflow scheduler host, not for dev/training/serving.
+# Its tight AWS dependency pins conflict with dvc-s3 and cause pip resolver backtracking.
+# Install separately on the Airflow host with its official constraints file:
+#   pip install "apache-airflow==2.9.0" --constraint \
+#     "https://raw.githubusercontent.com/apache/airflow/constraints-2.9.0/constraints-3.10.txt"
 
 # Testing + linting
 pytest>=7.4.0
