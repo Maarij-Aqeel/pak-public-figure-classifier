@@ -1,0 +1,82 @@
+{
+  "model": "ensemble_resnet_effnet",
+  "overall_accuracy": 0.6486,
+  "macro_f1": 0.5968,
+  "weighted_f1": 0.6325,
+  "macro_precision": 0.602,
+  "macro_recall": 0.6192,
+  "per_class": {
+    "ahmed_sharif_chaudhry": {
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "support": 4
+    },
+    "ahsan_iqbal": {
+      "precision": 0.5714,
+      "recall": 0.8,
+      "f1": 0.6667,
+      "support": 5
+    },
+    "asif_ali_zardari": {
+      "precision": 0.8889,
+      "recall": 0.8889,
+      "f1": 0.8889,
+      "support": 9
+    },
+    "benazir_bhutto": {
+      "precision": 1.0,
+      "recall": 0.75,
+      "f1": 0.8571,
+      "support": 8
+    },
+    "bilawal_bhutto_zardari": {
+      "precision": 0.8333,
+      "recall": 0.8333,
+      "f1": 0.8333,
+      "support": 6
+    },
+    "hamza_shehbaz": {
+      "precision": 0.25,
+      "recall": 0.1667,
+      "f1": 0.2,
+      "support": 6
+    },
+    "imran_khan": {
+      "precision": 0.6667,
+      "recall": 0.2857,
+      "f1": 0.4,
+      "support": 7
+    },
+    "maryam_nawaz_sharif": {
+      "precision": 0.625,
+      "recall": 0.7143,
+      "f1": 0.6667,
+      "support": 7
+    },
+    "murad_ali_shah": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 3
+    },
+    "nawaz_sharif": {
+      "precision": 0.5833,
+      "recall": 0.7778,
+      "f1": 0.6667,
+      "support": 9
+    },
+    "shehbaz_sharif": {
+      "precision": 0.5556,
+      "recall": 0.7143,
+      "f1": 0.625,
+      "support": 7
+    },
+    "yousaf_raza_gillani": {
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.8571,
+      "support": 3
+    }
+  }
+}

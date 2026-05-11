@@ -80,7 +80,7 @@ async def predict(request: Request,
         raise HTTPException(500, f"inference error: {exc}")
 
     if not out.face_detected:
-        raise HTTPException(422, "no face detected in uploaded image")
+        logger.warning("No face detected; predicting on full image")
 
     return PredictResponse(
         predictions=engine.format_top_k(out.top_k),

@@ -1,0 +1,18 @@
+                        precision    recall  f1-score   support
+
+ ahmed_sharif_chaudhry       0.50      0.50      0.50         4
+           ahsan_iqbal       0.50      0.80      0.62         5
+      asif_ali_zardari       1.00      0.89      0.94         9
+        benazir_bhutto       1.00      0.50      0.67         8
+bilawal_bhutto_zardari       0.71      0.83      0.77         6
+         hamza_shehbaz       0.20      0.17      0.18         6
+            imran_khan       0.50      0.29      0.36         7
+   maryam_nawaz_sharif       0.62      0.71      0.67         7
+        murad_ali_shah       0.00      0.00      0.00         3
+          nawaz_sharif       0.56      0.56      0.56         9
+        shehbaz_sharif       0.45      0.71      0.56         7
+   yousaf_raza_gillani       0.60      1.00      0.75         3
+
+              accuracy                           0.59        74
+             macro avg       0.55      0.58      0.55        74
+          weighted avg       0.61      0.59      0.58        74
