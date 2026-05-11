@@ -1,13 +1,29 @@
 # Pakistani Public Figures Image Classification
 
-Production-grade, end-to-end image classification system that identifies **30
-Pakistani public figures** (politicians + military spokespersons) from facial
+Production-grade, end-to-end image classification system that identifies
+**12 Pakistani public figures** (politicians + military spokespersons) from facial
 images. Built as a university semester project (ANN + MLOps, Category A).
 
 The differentiator is the **data pipeline** — multi-source scraping, MTCNN face
 validation, perceptual-hash deduplication, blur/resolution filtering, and
-FaceNet-based cross-class outlier detection. Models are trained on validated
-data only.
+cross-class duplicate auto-removal. Models are trained on validated data only.
+
+## Final results
+
+| Model | Test Accuracy | Weighted F1 | Macro F1 |
+|---|---|---|---|
+| ResNet-50 (ImageNet pretrained) | 59.46% | 0.580 | 0.547 |
+| EfficientNet-B3 (ImageNet pretrained) | 59.46% | 0.592 | 0.540 |
+| **FaceNet (VGGFace2 pretrained)** | **70.27%** | **0.680** | **0.658** |
+| 3-way ensemble (equal weights) | 68.92% | 0.674 | 0.657 |
+| **Weighted ensemble** (FaceNet 0.70, EffNet 0.15, ResNet 0.15) | **71.62%** | **0.697** | **0.687** |
+
+**Key finding:** face-pretrained backbones dominate ImageNet-pretrained
+backbones on this task. FaceNet (InceptionResnetV1 pretrained on VGGFace2's
+3.3M celebrity faces) outperforms ResNet-50 and EfficientNet-B3 by ~11 points
+absolute. This is consistent with the transfer-learning literature:
+domain-matched pretraining beats generic pretraining when target-task data
+is limited.
 
 ## Architecture
 
@@ -16,10 +32,10 @@ data only.
 |  Scrapers    | -> |  Validation  | -> | Split &   | -> | Training |
 |  (Google,    |    | (MTCNN,      |    | Augment   |    | (ResNet, |
 |   Bing, DDG, |    |  pHash,      |    | (75/15/10)|    | EffNet,  |
-|   Wiki,      |    |  blur, dim,  |    +-----------+    |   ViT)   |
-|   News,      |    |  outlier)    |          |          +-----+----+
-|   Selenium)  |    +--------------+          |                |
-+------+-------+                              v                v
+|   Wiki,      |    |  blur, dim,  |    +-----------+    | FaceNet) |
+|   News,      |    |  cross-class |          |          +-----+----+
+|   Selenium)  |    |  dedup)      |          |                |
++------+-------+    +--------------+          v                v
        |                                +----------+      +----------+
        v                                | Eval +   |      | MLflow   |
    data/raw/  --[DVC]--> data/validated/| GradCAM  |      | tracking |
@@ -43,7 +59,7 @@ data only.
 | Scraping | icrawler, wikipedia-api, duckduckgo-search, BeautifulSoup4, Selenium |
 | Face validation | facenet-pytorch (MTCNN + InceptionResnetV1) |
 | Dedup / Quality | imagehash, OpenCV |
-| Deep learning | PyTorch, torchvision |
+| Deep learning | PyTorch, torchvision, facenet-pytorch |
 | Augmentation | albumentations |
 | API | FastAPI + Uvicorn |
 | Frontend | Streamlit |
@@ -56,57 +72,86 @@ data only.
 | Testing | pytest |
 | Linting | ruff |
 
-## The 30 classes
+## The 12 classes
 
-| # | Class | Display name |
+| # | Class | Display name | Validated images |
+|---|---|---|---|
+| 1 | ahmed_sharif_chaudhry | Ahmed Sharif Chaudhry (DG ISPR) | 41 |
+| 2 | ahsan_iqbal | Ahsan Iqbal | 53 |
+| 3 | asif_ali_zardari | Asif Ali Zardari | 88 |
+| 4 | benazir_bhutto | Benazir Bhutto | 83 |
+| 5 | bilawal_bhutto_zardari | Bilawal Bhutto Zardari | 63 |
+| 6 | hamza_shehbaz | Hamza Shehbaz | 54 |
+| 7 | imran_khan | Imran Khan | 73 |
+| 8 | maryam_nawaz_sharif | Maryam Nawaz Sharif | 64 |
+| 9 | murad_ali_shah | Murad Ali Shah | 30 |
+| 10 | nawaz_sharif | Nawaz Sharif | 86 |
+| 11 | shehbaz_sharif | Shehbaz Sharif | 71 |
+| 12 | yousaf_raza_gillani | Yousaf Raza Gillani | 29 |
+
+**Total: 735 validated images** (scraped 3,775 raw, ~80% rejected by the
+validation pipeline).
+
+Splits: 75% train (550), 15% val (111), 10% test (74). Stratified, seed 42.
+
+## Per-class F1 (FaceNet)
+
+| Class | F1 | Status |
 |---|---|---|
-| 1 | imran_khan | Imran Khan |
-| 2 | nawaz_sharif | Nawaz Sharif |
-| 3 | shehbaz_sharif | Shehbaz Sharif |
-| 4 | maryam_nawaz_sharif | Maryam Nawaz Sharif |
-| 5 | hamza_shehbaz | Hamza Shehbaz |
-| 6 | asif_ali_zardari | Asif Ali Zardari |
-| 7 | bilawal_bhutto_zardari | Bilawal Bhutto Zardari |
-| 8 | benazir_bhutto | Benazir Bhutto |
-| 9 | yousaf_raza_gillani | Yousaf Raza Gillani |
-| 10 | murad_ali_shah | Murad Ali Shah |
-| 11 | shah_mehmood_qureshi | Shah Mehmood Qureshi |
-| 12 | asad_umar | Asad Umar |
-| 13 | sheikh_rashid_ahmed | Sheikh Rashid Ahmed |
-| 14 | fawad_chaudhry | Fawad Chaudhry |
-| 15 | pervez_khattak | Pervez Khattak |
-| 16 | ali_amin_gandapur | Ali Amin Gandapur |
-| 17 | fazl_ur_rehman | Fazl-ur-Rehman |
-| 18 | sirajul_haq | Siraj-ul-Haq |
-| 19 | mahmood_khan_achakzai | Mahmood Khan Achakzai |
-| 20 | akhtar_mengal | Akhtar Mengal |
-| 21 | pervez_musharraf | Pervez Musharraf |
-| 22 | pervez_elahi | Pervez Elahi |
-| 23 | chaudhry_shujaat_hussain | Chaudhry Shujaat Hussain |
-| 24 | khawaja_asif | Khawaja Asif |
-| 25 | ahsan_iqbal | Ahsan Iqbal |
-| 26 | hina_rabbani_khar | Hina Rabbani Khar |
-| 27 | sherry_rehman | Sherry Rehman |
-| 28 | asim_munir | Asim Munir (current COAS) |
-| 29 | qamar_javed_bajwa | Qamar Javed Bajwa (former COAS) |
-| 30 | ahmed_sharif_chaudhry | Ahmed Sharif Chaudhry (current DG ISPR) |
+| benazir_bhutto | 0.93 | ✓ Excellent |
+| asif_ali_zardari | 0.84 | ✓ Excellent |
+| ahsan_iqbal | 0.80 | ✓ Strong |
+| nawaz_sharif | 0.80 | ✓ Strong |
+| maryam_nawaz_sharif | 0.77 | ✓ Strong |
+| yousaf_raza_gillani | 0.75 | ✓ Good |
+| bilawal_bhutto_zardari | 0.67 | OK |
+| murad_ali_shah | 0.67 | OK (was 0.00 with ImageNet backbones) |
+| shehbaz_sharif | 0.67 | OK |
+| imran_khan | 0.44 | Weak — data quality issue |
+| ahmed_sharif_chaudhry | 0.33 | Weak — only 41 validated |
+| hamza_shehbaz | 0.22 | Weak — family resemblance |
+
+**Failure modes:**
+
+1. **imran_khan (F1 0.44)** — dataset contains a mix of cricket-era (1980s-90s)
+   and political-era (2010s-2020s) Imran Khan photos. The visual gap between
+   these is large enough that the model cannot reconcile both within a single
+   class.
+2. **hamza_shehbaz (F1 0.22)** — family resemblance with Maryam Nawaz Sharif
+   (cousin) and Shehbaz Sharif (father). With only 54 validated training
+   images, the model lacks discriminative features.
+3. **ahmed_sharif_chaudhry (F1 0.33)** — smallest validated count (41) and
+   limited unique-pose variation. Confused with other clean-shaven, mustached
+   men in the dataset.
 
 ## Quick start (local)
 
 ```bash
-git clone https://github.com/<USER>/pak-public-figures-classifier.git
-cd pak-public-figures-classifier
+git clone https://github.com/Maarij-Aqeel/pak-public-figure-classifier.git
+cd pak-public-figure-classifier
 
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+pip install facenet-pytorch
 
-dvc pull                          # if remote configured
-python scripts/run_data_collection.py
-python scripts/run_validation.py
-python scripts/run_split.py --force
-python scripts/run_training.py
-python scripts/run_evaluation.py --model resnet50
-uvicorn src.api.main:app --reload
+# Scrape (target ~300 raw per class)
+python -m scripts.run_data_collection --target-count 300
+
+# Validate (MTCNN + dedup + quality + cross-class dedup)
+python -m scripts.run_validation --skip-outliers --auto-remove-cross-class
+
+# Stratified split
+python -m scripts.run_split --force
+
+# Train all 3 models (set MLFLOW_TRACKING_URI for local file backend)
+export MLFLOW_TRACKING_URI=file:./mlruns
+python -m scripts.run_training
+
+# Evaluate
+python -m scripts.run_evaluation --model facenet_vggface2 --skip-gradcam
+
+# Serve
+uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
 streamlit run frontend/app.py
 ```
 
@@ -124,7 +169,7 @@ docker-compose up --build
 | Method | Path | Description |
 |---|---|---|
 | GET | `/health` | Liveness + readiness |
-| GET | `/classes` | List all 30 classes |
+| GET | `/classes` | List all 12 classes |
 | POST | `/predict` | Single-image top-3 prediction |
 | POST | `/predict-batch` | Multi-image prediction |
 
@@ -132,35 +177,38 @@ docker-compose up --build
 
 ```bash
 curl -F "file=@portrait.jpg" \
-     "http://localhost:8000/predict?model=resnet50"
+     "http://localhost:8000/predict?model=facenet_vggface2"
 ```
 
 ```json
 {
   "predictions": [
-    {"class": "imran_khan", "display_name": "Imran Khan", "confidence": 0.94},
-    {"class": "shah_mehmood_qureshi", "display_name": "Shah Mehmood Qureshi", "confidence": 0.04},
-    {"class": "shehbaz_sharif", "display_name": "Shehbaz Sharif", "confidence": 0.02}
+    {"class": "imran_khan", "display_name": "Imran Khan", "confidence": 0.87},
+    {"class": "shehbaz_sharif", "display_name": "Shehbaz Sharif", "confidence": 0.06},
+    {"class": "nawaz_sharif", "display_name": "Nawaz Sharif", "confidence": 0.03}
   ],
-  "model_used": "resnet50",
+  "model_used": "facenet_vggface2",
   "face_detected": true,
   "face_bbox": [120, 80, 360, 320],
-  "inference_time_ms": 87.2
+  "inference_time_ms": 92.4
 }
 ```
 
-## Model performance
+## Path to 90%+ accuracy
 
-See `results/model_comparison.csv` after training:
+The ceiling at 71.62% reflects three structural constraints:
 
-| Model | Val accuracy | Test accuracy | Macro F1 |
-|---|---|---|---|
-| ResNet-50 | (after training) | (after training) | (after training) |
-| EfficientNet-B3 | (after training) | (after training) | (after training) |
-| ViT-B/16 (bonus) | (after training) | (after training) | (after training) |
+1. **Small dataset** — 735 validated images for 12 classes (~46 train/class average).
+2. **Imran Khan data quality** — re-scrape with "Imran Khan PTI" /
+   "Imran Khan prime minister" queries to exclude cricket-era images (~+3-5%).
+3. **Family resemblance pairs** — Nawaz↔Maryam, Shehbaz↔Hamza, Bhutto family.
+   Margin-based losses (ArcFace) would help (~+2-4%).
+4. **Full 30-class coverage** — the original project spec was 30 figures; the
+   current 12 is what one team member collected. With teammates' contributions,
+   total training data ~3-4× larger.
 
-Training curves, confusion matrices, and Grad-CAM artifacts are auto-saved
-under `results/` and uploaded to MLflow.
+Combined potential: ~85-92% with the full dataset + Imran data cleanup +
+ArcFace.
 
 ## DVC pipeline
 
@@ -193,7 +241,7 @@ pak-public-figures-classifier/
 │   ├── data_collection/    # all scrapers
 │   ├── data_validation/    # face + dedup + quality + outlier
 │   ├── data_preprocessing/ # split, augment, dataset
-│   ├── models/             # ResNet, EfficientNet, ViT, trainer
+│   ├── models/             # ResNet, EfficientNet, FaceNet, ViT, trainer
 │   ├── evaluation/         # metrics, confusion matrix, Grad-CAM
 │   ├── api/                # FastAPI
 │   └── utils/
@@ -218,14 +266,6 @@ pak-public-figures-classifier/
 | TA (ANN-A1) | Omer Farooq Khan | [@omerrfarooqq](https://github.com/omerrfarooqq) |
 | TA (ANN-A2) | Aun Ali | [@Aun-Dev146](https://github.com/Aun-Dev146) |
 | TA (MLOps) | Ahsan Butt | [@ahsan608](https://github.com/ahsan608) |
-
-## Member ownership
-
-| Member | Classes | Owns |
-|---|---|---|
-| Abdullah | 1–10 (PML-N + PPP) | Scrapers, augmentation, DVC dataset |
-| Raza     | 11–20 (PTI + religious parties) | Scrapers, ResNet-50 training, evaluation |
-| Maarij   | 21–30 (others + military) | Scrapers, EfficientNet-B3, FastAPI, Docker, CI/CD, EC2, frontend |
 
 ## License
 

@@ -1,0 +1,2 @@
+model,best_val_accuracy,best_val_f1,best_epoch,test_accuracy,test_f1,epochs_run
+facenet_vggface2,0.7297297297297297,0.7189951597560293,9,0.7027027027027027,0.6800631603263182,17

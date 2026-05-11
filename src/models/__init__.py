@@ -1,9 +1,13 @@
 """Model architectures + unified trainer."""
 from src.models.efficientnet_model import EfficientNetClassifier
+from src.models.facenet_model import FaceNetClassifier
 from src.models.resnet_model import ResNetClassifier
 from src.models.vit_model import ViTClassifier
 
-__all__ = ["ResNetClassifier", "EfficientNetClassifier", "ViTClassifier", "build_model"]
+__all__ = [
+    "ResNetClassifier", "EfficientNetClassifier",
+    "ViTClassifier", "FaceNetClassifier", "build_model",
+]
 
 
 def build_model(name: str, num_classes: int, pretrained: bool = True):
@@ -16,4 +20,6 @@ def build_model(name: str, num_classes: int, pretrained: bool = True):
                                        pretrained=pretrained)
     if name == "vit_b_16":
         return ViTClassifier(num_classes=num_classes, pretrained=pretrained)
+    if name in ("facenet", "facenet_vggface2"):
+        return FaceNetClassifier(num_classes=num_classes, pretrained=pretrained)
     raise ValueError(f"Unknown model: {name}")
