@@ -48,6 +48,9 @@ data/metadata/*.csv
 models/saved/*.pt
 models/saved/*.pth
 
+# Build artifacts
+*.zip
+
 # Logs
 logs/
 *.log

@@ -68,7 +68,11 @@ class InferenceEngine:
                                      pretrained=False)
                 state = torch.load(ckpt, map_location=self.device,
                                     weights_only=False)
-                model.load_state_dict(state["state_dict"])
+                missing, unexpected = model.load_state_dict(
+                    state["state_dict"], strict=False)
+                if unexpected:
+                    logger.debug("Ignored unused keys for %s: %s",
+                                 model_name, unexpected[:3])
                 model.eval().to(self.device)
                 self.models[model_name] = model
                 loaded.append(model_name)
