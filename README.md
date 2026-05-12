@@ -124,6 +124,19 @@ Splits: 75% train (550), 15% val (111), 10% test (74). Stratified, seed 42.
    limited unique-pose variation. Confused with other clean-shaven, mustached
    men in the dataset.
 
+## Pretrained models
+
+The trained checkpoints are hosted on Hugging Face Hub (too large for git):
+
+```bash
+pip install huggingface_hub
+mkdir -p models/saved
+hf download Maarij-Aqeel/pak-faces-classifier \
+    --include "*.pt" --local-dir models/saved/
+```
+
+Or browse the repo at <https://huggingface.co/Maarij-Aqeel/pak-faces-classifier>.
+
 ## Quick start (local)
 
 ```bash
